@@ -1,7 +1,7 @@
 #include "philo.h"
 
-int			x = 30;
-pthread_mutex_t	mutex[30];
+int			x = 2;
+pthread_mutex_t	mutex[2];
 
 void	*routine()
 {
@@ -9,16 +9,20 @@ void	*routine()
 	int k;
 
 	k = n++;
+	printf("---> %d HERE \n", k);
 	pthread_mutex_lock(mutex + k);
 	pthread_mutex_lock(mutex + ((k + 1) % x));
-	printf("----->start : %d\n", k);
+	printf("---> %d is eating \n", k);
 
-	usleep(30);
+	sleep(500);
 
 	// printf("\n");
-	printf("->end : %d\n", k);
 	pthread_mutex_unlock(mutex + k);
 	pthread_mutex_unlock(mutex + ((k + 1) % x));
+	printf("---> %d is sleeping \n", k);
+	sleep(500);
+	printf("---> %d is thinking \n", k);
+
 	return (NULL);
 }
 
@@ -36,14 +40,6 @@ int	main()
 		// usleep(5);
 		i++;
 	}
-	// usleep(5);
-	// i = 1;
-	// while (i < 10)
-	// {
-	// 	pthread_create(th + i, NULL, &routine, NULL);
-	// 	i += 2;
-	// }
-
 	i = -1;
 	while (++i < x)
 	{

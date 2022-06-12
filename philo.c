@@ -9,23 +9,21 @@ t_data	*initialise(int ac, char **av)
 
 	data = malloc(sizeof(t_data)); //*********** pro
 	data->n = my_atoi(av[1]);
-	data->die = my_atoi(av[2]);
-	data->eat = my_atoi(av[3]);
-	data->sleep = my_atoi(av[4]);
-	philo = malloc(sizeof(t_data) * (data->n));//******
+	data->time_to_die = my_atoi(av[2]);
+	data->time_to_eat = my_atoi(av[3]) * 1000;
+	data->time_to_sleep = my_atoi(av[4]) * 1000;
+	philo = malloc(sizeof(t_philo) * (data->n));//******
 	//protection
-	n = (ac == 6) * my_atoi(av[5]) - 1 * (ac != 6);
+	n = -1;
+	if (ac == 6)
+		n = my_atoi(av[5]);
 	i = -1;
 	while (++i < data->n)
 	{
-		(philo + i)->time_to_die = data->die;
-		(philo + i)->time_to_eat = data->eat;
-		(philo + i)->time_to_sleep = data->sleep;
 		(philo + i)->must_eat = n;
-		(philo + i)->stat = 0;
-		// (philo + i)->time = -1;
 		pthread_mutex_init(&((philo + i)->mutex), NULL);
 	}
+	data->philo = philo;
 	return(data);
 }
 
@@ -34,50 +32,81 @@ void	*critical_section(void *data)
 	struct timeval	now;
 	static int		n;
 	t_data			*d;
+	t_philo			*philo;
 	int				i;
-	int				x;
 
 	d = data;
+	philo = d->philo;
 	i = n++;
 	gettimeofday(&now, NULL);
-	(d->philo + i)->time = now.tv_usec;
+	(philo + i)->last_meal = now.tv_usec / 1000;
+	if (i % 2)
+		usleep(1000);
+	while ((philo + i)->must_eat)
+	{	
+		pthread_mutex_lock(&((philo + i)->mutex)); //******************
+		pthread_mutex_lock(&((philo + (i + 1) % d->n)->mutex)); //*****
+		printf("---> %d is eating \n", i + 1);
+		gettimeofday(&now, NULL);
+		(philo + i)->last_meal = now.tv_usec / 1000;
+		usleep(d->time_to_eat);
+		(philo + i)->must_eat -= ((philo + i)->must_eat > 0);
+		pthread_mutex_unlock(&((philo + i)->mutex)); //******************
+		pthread_mutex_unlock(&((philo + (i + 1) % d->n)->mutex)); //*****
+		printf("---> %d is sleeping \n", i + 1);
+		usleep(d->time_to_sleep);
+		printf("---> %d is thinking \n", i + 1);
+	}	
+	return(NULL);
+}
+
+
+void	*check_for_starvation(void *d)
+{
+	struct timeval	now;
+	suseconds_t		x;
+	t_philo			*philo;
+	t_data			*data;
+	int				i;
+
+	data = (t_data *)d;
+	philo = data->philo;
 	while (1)
 	{
-		pthread_mutex_lock(&((d->philo + i)->mutex)); //******************
-		pthread_mutex_lock(&((d->philo + (i + 1) % d->n)->mutex)); //*****
-		x = -1;
-		while (x < d->eat)
+		gettimeofday(&now, NULL);
+		i = -1;
+		while (++i < data->n)
 		{
-			gettimeofday(&now, NULL);
-			x = now.tv_usec - (d->philo + i)->time;
+			// printf("%ld - ", now.tv_usec / 1000);
+			// printf("%ld - ", (philo + i)->last_meal);
+
+			x = ((now.tv_usec / 1000) - (philo + i)->last_meal);
+			// printf("%ld\n", x);
+			if (philo->must_eat && x > data->time_to_die)
+			{
+				printf("-- %ld ---> %d is dead \n", x, i + 1);
+				exit (0);
+			}
 		}
-		pthread_mutex_unlock(&((d->philo + i)->mutex)); //******************
-		pthread_mutex_unlock(&((d->philo + (i + 1) % d->n)->mutex)); //*****
-		
-		x = -1;
-		while (x < d->sleep)
-		{
-			gettimeofday(&now, NULL);
-			x = now.tv_usec - (d->philo + i)->time;
-		}
-	}	
+		usleep(3000);
+	}
 	return(NULL);
 }
 
 int	main(int ac, char **av)
 {
-	t_data	*data;
-	int		i;
+	t_data		*data;
+	pthread_t	*th;
+	int			i;
 
-
+	//protect ac
 	data = initialise(ac, av);
+	th = malloc(sizeof(pthread_t) * (data->n + 1)); //***************
 	i = -1;
 	while (++i < data->n)
-	{
-	
-		pthread_create(&((data->philo + i)->th), NULL, critical_section, (void *)data);
-	}
+		pthread_create(th + i, NULL, critical_section, (void *)data);
+	pthread_create(th + data->n, NULL, check_for_starvation, (void *)data);
 	i = -1;
 	while (++i < data->n)
-		pthread_join((data->philo + i)->th, NULL);
+		pthread_join(th[i], NULL);
 }

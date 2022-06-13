@@ -10,18 +10,17 @@ short	my_putstr(char *str, int fd)
 	return (1);
 }
 
-void	ft_putchar_fd(char c, int fd)
+short	error(char *str, short n)
 {
-	write(fd, &c, 1);
-}
-
-void	ft_putnbr_fd(int n, int fd)
-{
-	if (n > 9)
-		ft_putnbr_fd(n / 10, 1);
-	n %= 10;
-	n += 48;
-	write(1, &n, 1);
+	if (n == 0)
+		my_putstr(str, 2);
+	else if (n == 1)
+		my_putstr("pthread_mutex_lock() failed\n", 2);
+	else if (n == 2)
+		my_putstr("pthread_mutex_unlock() failed\n", 2);
+	else if (n == 3)
+		my_putstr("gettimeofday() failed\n", 2);
+	exit (1);
 }
 
 int	my_atoi(char *str)
@@ -30,7 +29,7 @@ int	my_atoi(char *str)
 
 	n = 0;
 	if (*str == '-')
-		exit (my_putstr("server id should be a potisive number\n", 2));
+		error("input should include potisive numbers only\n", 0);
 	if (*str == '+' && *(str + 1))
 		str++;
 	while (*str > 47 && *str < 58)
@@ -39,6 +38,6 @@ int	my_atoi(char *str)
 		str++;
 	}
 	if (*str)
-		exit (my_putstr("server id should be a number\n", 2));
+		error("input should include numbers only\n", 0);
 	return (n);
 }

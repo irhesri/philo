@@ -20,6 +20,8 @@ short	error(char *str, short n)
 		my_putstr("pthread_mutex_unlock() failed\n", 2);
 	else if (n == 3)
 		my_putstr("gettimeofday() failed\n", 2);
+	else if (n == 4)
+		my_putstr("pthread_mutex_init() failed\n", 2);
 	exit (1);
 }
 

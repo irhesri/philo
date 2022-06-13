@@ -20,9 +20,9 @@ typedef	struct s_data
 	// int		index;
 	int				n;
 	struct timeval	start;
-	suseconds_t		time_to_die;
-	suseconds_t		time_to_eat;
-	suseconds_t		time_to_sleep;
+	time_t			time_to_die;
+	time_t			time_to_eat;
+	time_t			time_to_sleep;
 	t_philo			*philo;
 } t_data;
 

@@ -1,13 +1,13 @@
 #include "philo.h"
 
-time_t	get_timestamp(struct timeval start)
+time_t	get_timestamp(struct timeval start, struct timeval end)
 {
-	struct timeval	now;
 	time_t			result[2];
 
-	(gettimeofday(&now, NULL) != 0) && error(NULL, 3);
-	result[0] = (now.tv_sec - start.tv_sec) * 1000 ;
-	result[1] = (now.tv_usec - start.tv_usec) / 1000;
+	result[0] = (end.tv_sec - start.tv_sec) * 1000 ;
+	// result[0] = end.tv_usec / 1000 + end.tv_sec * 1000 ;
+	// result[1] = start.tv_usec / 1000 + start.tv_sec * 1000 ;
+	result[1] = (end.tv_usec - start.tv_usec) / 1000;
 	return (result[0] + result[1]);
 }
 
@@ -29,6 +29,7 @@ t_data	*initialise(int ac, char **av)
 	n = -1;
 	if (ac == 6)
 		n = my_atoi(av[5]);
+	data->must_eat = n * (n == -1) + (unsigned long long)(n * data->n * (n != -1));
 	i = -1;
 	while (++i < data->n)
 	{
@@ -39,70 +40,88 @@ t_data	*initialise(int ac, char **av)
 	return (data);
 }
 
-// void	my_sleep(time_t to_sleep)
-// {
-// 	struct timeval	now;
+struct timeval	my_sleep(struct timeval start, time_t to_sleep/*, int i*/)
+{
+	struct timeval	now;
+	time_t			x;
 
-// 	(gettimeofday(&now, NULL) != 0) && error(NULL, 3);
-// 	usleep (to_sleep / 2 * 1000);
-// 	// to_sleep -= 1000;
-// 	// printf("%d\n", );
-// 	while (get_timestamp(now) < to_sleep);
-// 		// printf("%ld\n", get_timestamp(now));
-
-// }
+	usleep((3 * to_sleep) / 4);
+	to_sleep += (start.tv_sec * 1000 + start.tv_usec / 1000);
+	x = -1;
+	while (x < to_sleep)
+	{
+		(gettimeofday(&now, NULL) != 0) && error(NULL, 3);
+		x = (now.tv_sec * 1000 + now.tv_usec / 1000);
+		usleep (50);
+	}
+	// if (x == to_sleep)
+	// {
+	// 	usleep (1000);
+	// 	(gettimeofday(&now, NULL) != 0) && error(NULL, 3);
+	// }
+	return (now);
+}
 
 // (i % 2) && (usleep(100) != 0) && error("usleep() failed\n", 0);
+// (usleep(d->time_to_eat * 1000) != 0) && error("usleep() failed\n", 0);
+// (usleep(d->time_to_sleep * 1000) != 0) && error("usleep() failed\n", 0);
 void	*critical_section(void *data)
 {
 	static int		n;
 	t_philo			*philo;
 	t_data			*d;
-	int				i;
-	int				x;
+	struct timeval	now;
+	int				i[2];
 
 	d = data;
 	philo = d->philo;
-	i = n++;
-	x = (i + 1) % d->n;
-	while ((philo + i)->must_eat)
+	i[0] = n++;
+	i[1] = (i[0] + 1) % d->n;
+	while (d->must_eat)
 	{	
-		(pthread_mutex_lock(&((philo + i)->mutex)) != 0) && error(NULL, 1);
-		(pthread_mutex_lock(&((philo + x)->mutex)) != 0) && error(NULL, 1);
-		printf("%ld %d is eating 🍽️ \n", get_timestamp(d->start), i + 1);
-		(gettimeofday(&((philo + i)->last_meal), NULL) != 0) && error(NULL, 3);
-		// (usleep(d->time_to_eat * 1000) != 0) && error("usleep() failed\n", 0);
-		// my_sleep(d->time_to_eat);
-		(philo + i)->must_eat -= ((philo + i)->must_eat > 0);
-		(pthread_mutex_unlock(&((philo + i)->mutex)) != 0) && error(NULL, 2);
-		(pthread_mutex_unlock(&((philo + x)->mutex)) != 0) && error(NULL, 2);
-		printf("%ld %d is sleeping 😴 \n", get_timestamp(d->start), i + 1);
-		// (usleep(d->time_to_sleep * 1000) != 0) && error("usleep() failed\n", 0);
-		// my_sleep(d->time_to_sleep);
-		printf("%ld %d is thinking 💭 \n", get_timestamp(d->start), i + 1);
-	}	
+		(pthread_mutex_lock(&((philo + i[0])->mutex)) != 0) && error(NULL, 1);
+		(gettimeofday(&now, NULL) != 0) && error(NULL, 3);
+		printf(" % 8ld % 4d   has taken a right fork 🍴 \n", get_timestamp(d->start, now), (*i) + 1);
+		(pthread_mutex_lock(&((philo + i[1])->mutex)) != 0) && error(NULL, 1);
+		(gettimeofday(&now, NULL) != 0) && error(NULL, 3);
+		printf(" % 8ld % 4d   has taken a left fork  🍴 \n", get_timestamp(d->start, now), (*i) + 1);
+		(gettimeofday(&((philo + *i)->last_meal), NULL) != 0) && error("", 3);
+		printf("\033[34;1m % 8ld % 4d   is eating\033[0m   🍽️ \n", get_timestamp(d->start, (philo + (*i))->last_meal), (*i) + 1);
+		d->must_eat -= ((philo + *i)->must_eat > 0);
+		if (!d->must_eat)
+			exit (0);				// exit threads
+		(philo + *i)->must_eat -= ((philo + *i)->must_eat > 0);
+		now = my_sleep((philo + *i)->last_meal, d->time_to_eat);
+		// (gettimeofday(&now, NULL) != 0) && error(NULL, 3);
+		(pthread_mutex_unlock(&((philo + *i)->mutex)) != 0) && error(NULL, 2);
+		(pthread_mutex_unlock(&((philo + i[1])->mutex)) != 0) && error(NULL, 2);
+		printf("\033[0;1m % 8ld % 4d   is sleeping\033[0m 😴 \n", get_timestamp(d->start, now), (*i) + 1);
+		now = my_sleep(now, d->time_to_sleep);
+		// (gettimeofday(&now, NULL) != 0) && error(NULL, 3);
+		printf("\033[2;1m % 8ld % 4d   is thinking\033[0m 💭 \n", get_timestamp(d->start, now), (*i) + 1);
+	}
 	return (NULL);
 }
 
-void	*check_for_starvation(void *d)
+void	*check_for_starvation(void *data)
 {
-	t_philo	*philo;
-	t_data	*data;
+	t_data	*d;
 	time_t	x;
 	int		i;
+	struct timeval	now;
 
-	data = (t_data *)d;
-	philo = data->philo;
+	d = (t_data *)data;
 	while (1)
 	{
 		i = -1;
-		while (++i < data->n)
+		(gettimeofday(&now, NULL) != 0) && error(NULL, 3);
+		while (++i < d->n)
 		{
-			x = get_timestamp((philo + i)->last_meal);
-			if (philo->must_eat && x > data->time_to_die)
+			x = get_timestamp((d->philo + i)->last_meal, now);
+			if (d->philo->must_eat && x > d->time_to_die)
 			{
-				printf("\033[31;1m-- %ld ---> %d is dead\033[0m 💀 \n", x, i + 1);
-				exit (0);
+				printf("\033[31;1m % 8ld % 4d   is dead!\033[0m    💀 \n", x, i + 1);
+				exit (0);				// exit threads
 			}
 		}
 		(usleep(1000) != 0) && error("usleep() failed\n", 0);
@@ -126,7 +145,7 @@ int	main(int ac, char **av)
 	{
 		(data->philo + i)->last_meal = data->start;
 		pthread_create(th + i, NULL, critical_section, (void *)data);
-		(usleep(100) != 0) && error("usleep() failed\n", 0);
+		(usleep(50) != 0) && error("usleep() failed\n", 0);
 	}
 	pthread_create(th + data->n, NULL, check_for_starvation, (void *)data);
 	i = -1;

@@ -10,20 +10,19 @@
 typedef	struct s_philo
 {
 	int				must_eat;
-	// short			stat;
 	struct timeval	last_meal;
 	pthread_mutex_t	mutex;
 } t_philo;
 
 typedef	struct s_data
 {
-	// int		index;
-	int				n;
-	struct timeval	start;
-	time_t			time_to_die;
-	time_t			time_to_eat;
-	time_t			time_to_sleep;
-	t_philo			*philo;
+	unsigned long long	must_eat;
+	struct timeval		start;
+	t_philo				*philo;
+	time_t				time_to_die;
+	time_t				time_to_eat;
+	time_t				time_to_sleep;
+	int					n;
 } t_data;
 
 int		my_atoi(char *str);

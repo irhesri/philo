@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/20 03:25:18 by irhesri           #+#    #+#             */
+/*   Updated: 2022/07/20 03:25:19 by irhesri          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 t_philo	*init_philos(t_data *data, char **av)
@@ -29,7 +41,7 @@ t_data	*init_data(int ac, char **av)
 
 	data = (t_data *) malloc(sizeof(t_data));
 	if (!data)
-		return data;
+		return (data);
 	data->philos_num = my_atoi(av[1]);
 	data->time_to_die = my_atoi(av[2]);
 	data->time_to_eat = my_atoi(av[3]);

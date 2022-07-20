@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   functions.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/20 03:25:15 by irhesri           #+#    #+#             */
+/*   Updated: 2022/07/20 03:25:16 by irhesri          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void	my_sleep(struct timeval	start, int time_to_sleep)
+void	my_sleep(struct timeval start, int time_to_sleep)
 {
 	struct timeval	now;
 
@@ -12,6 +24,8 @@ void	my_sleep(struct timeval	start, int time_to_sleep)
 	}
 }
 
+// result[0] = end.tv_usec / 1000 + end.tv_sec * 1000 ;
+// result[1] = start.tv_usec / 1000 + start.tv_sec * 1000 ;
 time_t	gettimestamp(struct timeval start, struct timeval end)
 {
 	time_t	res[2];
@@ -28,17 +42,17 @@ void	my_print(t_data *data, struct timeval end, int index, short n)
 	ts = gettimestamp(data->start, end);
 	pthread_mutex_lock(&data->print);
 	if (n == 1)
-		printf("%ld   %d   right fork\n", ts, index);
+		printf(" % 8ld % 4d   has taken a right fork 🍴 \n", ts, index);
 	if (n == 2)
-		printf("%ld   %d   left fork\n", ts, index);
+		printf(" % 8ld % 4d   has taken a left fork  🍴 \n", ts, index);
 	if (n == 3)
-		printf("%ld   %d   is eating\n", ts, index);	
+		printf("\033[34;1m % 8ld % 4d   is eating\033[0m   🍽️ \n", ts, index);
 	if (n == 4)
-		printf("%ld   %d   is sleeping\n", ts, index);
+		printf("\033[0;1m % 8ld % 4d   is sleeping\033[0m 😴 \n", ts, index);
 	if (n == 5)
-		printf("%ld   %d   is thinking\n", ts, index);
+		printf("\033[2;1m % 8ld % 4d   is thinking\033[0m 💭 \n", ts, index);
 	if (n == 6)
-		printf("%ld   %d   died\n", ts, index);
+		printf("\033[31;1m % 8ld % 4d   died!\033[0m    💀 \n", ts, index);
 	if (n != 6)
 		pthread_mutex_unlock(&data->print);
 }

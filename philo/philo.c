@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/20 03:25:24 by irhesri           #+#    #+#             */
+/*   Updated: 2022/07/20 03:25:25 by irhesri          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
+
 void	eat(t_data *data, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->meal);
@@ -32,11 +45,10 @@ void	sleep_unlock(t_data *data, t_philo *philo, int x)
 
 void	*critical_section(void *data)
 {
-	int			x;
-	t_philo		*philo;
-	static int	i;
+	int				x;
+	t_philo			*philo;
+	static int		i;
 	struct timeval	now;
-
 
 	pthread_mutex_lock(&((t_data *)data)->wait);
 	philo = ((t_data *)data)->philo + i++;
@@ -69,7 +81,7 @@ void	check_for_starvation(t_data *data, t_philo *philo)
 	{
 		pthread_mutex_lock(&data->must_eat);
 		if (!data->philos_left)
-			return;
+			return ;
 		pthread_mutex_unlock(&data->must_eat);
 		i = -1;
 		gettimeofday(&now, NULL);
@@ -79,7 +91,7 @@ void	check_for_starvation(t_data *data, t_philo *philo)
 			if (gettimestamp((philo + i)->last_meal, now) > data->time_to_die)
 			{
 				my_print(data, now, i + 1, 6);
-				return;
+				return ;
 			}
 			pthread_mutex_unlock(&(philo + i)->meal);
 		}
@@ -94,24 +106,23 @@ int	main(int ac, char **av)
 	pthread_t	*th;
 
 	if (ac != 5 && ac != 6)
-		return(printf("wrong num of arguments\n"));
+		return (printf("wrong num of arguments\n"));
 	data = init_data(ac, av);
 	th = malloc (sizeof(pthread_t) * my_atoi(av[1]));
 	if (!data || !data->philo || !th)
-		return(printf("allocation error\n"));
+		return (printf("allocation error\n"));
 	gettimeofday(&data->start, NULL);
 	i = -1;
 	while (++i < data->philos_num)
 		pthread_create(th + i, NULL, critical_section, data);
 	check_for_starvation(data, data->philo);
-	// while (++i < data->philos_num)
-	// {
-	// 	pthread_mutex_destroy(&(data->philo + i)->fork);
-	// 	pthread_mutex_destroy(&(data->philo + i)->meal);
-	// }
-	// pthread_mutex_destroy(&data->wait);
-	// pthread_mutex_destroy(&data->must_eat);
-	// pthread_mutex_destroy(&data->print);
-
+	while (++i < data->philos_num)
+	{
+		pthread_mutex_destroy(&(data->philo + i)->fork);
+		pthread_mutex_destroy(&(data->philo + i)->meal);
+	}
+	pthread_mutex_destroy(&data->wait);
+	pthread_mutex_destroy(&data->must_eat);
+	pthread_mutex_destroy(&data->print);
 	return (0);
 }

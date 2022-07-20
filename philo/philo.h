@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/20 03:25:28 by irhesri           #+#    #+#             */
+/*   Updated: 2022/07/20 03:25:29 by irhesri          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -14,8 +26,7 @@ typedef struct s_philo
 	struct timeval	last_meal;
 	pthread_mutex_t	fork;
 	pthread_mutex_t	meal;
-
-} t_philo;
+}	t_philo;
 
 typedef struct s_data
 {
@@ -28,17 +39,13 @@ typedef struct s_data
 	struct timeval	start;
 	pthread_mutex_t	print;
 	pthread_mutex_t	wait;
-	pthread_mutex_t	must_eat; //
-
-} t_data;
-
-
+	pthread_mutex_t	must_eat;
+}	t_data;
 
 int		my_atoi(char *str);
-// void	my_print(t_data *data, int index, short n);
+void	my_print(t_data *data, struct timeval end, int index, short n);
+void	my_sleep(struct timeval start, int time_to_sleep);
 t_data	*init_data(int ac, char **av);
 time_t	gettimestamp(struct timeval start, struct timeval end);
-void	my_print(t_data *data, struct timeval end, int index, short n);
-void	my_sleep(struct timeval	start, int time_to_sleep);
 
 #endif

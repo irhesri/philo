@@ -6,7 +6,7 @@
 /*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:24 by irhesri           #+#    #+#             */
-/*   Updated: 2022/07/20 03:25:25 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/08/14 17:40:13 by irhesri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,88 +14,72 @@
 
 void	eat(t_data *data, t_philo *philo)
 {
-	pthread_mutex_lock(&philo->meal);
-	gettimeofday(&philo->last_meal, NULL);
-	pthread_mutex_unlock(&philo->meal);
-	my_print(data, philo->last_meal, philo->index + 1, 2);
-	my_print(data, philo->last_meal, philo->index + 1, 3);
-	if (philo->must_eat > 0)
+	my_print(data, philo->index + 1, 2);
+	my_print(data, philo->index + 1, 3);
+	pthread_mutex_lock(philo->meal);
+	gettimeofday(&(philo->last_meal), NULL);
+	pthread_mutex_unlock(philo->meal);
+	my_sleep(data->time_to_sleep);
+	if (philo->must_eat > 0 && !(--(philo->must_eat)))
 	{
-		philo->must_eat--;
-		if (!philo->must_eat)
-		{
-			pthread_mutex_lock(&data->must_eat);
-			data->philos_left--;
-			pthread_mutex_unlock(&data->must_eat);
-		}
+		pthread_mutex_lock(data->must_eat);
+		data->philos_left--;
+		pthread_mutex_unlock(data->must_eat);
 	}
-	my_sleep(philo->last_meal, data->time_to_eat);
+	pthread_mutex_unlock(philo->fork);
 }
 
-void	sleep_unlock(t_data *data, t_philo *philo, int x)
-{
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	my_print(data, now, philo->index + 1, 4);
-	pthread_mutex_unlock(&(data->philo + x)->fork);
-	pthread_mutex_unlock(&philo->fork);
-	my_sleep(now, data->time_to_sleep);
-}
-
-void	*critical_section(void *data)
+void	*critical_section(void *data_)
 {
 	int				x;
+	t_data			*data;
 	t_philo			*philo;
-	static int		i;
-	struct timeval	now;
+	static int		index;
 
-	pthread_mutex_lock(&((t_data *)data)->wait);
-	philo = ((t_data *)data)->philo + i++;
-	pthread_mutex_unlock(&((t_data *)data)->wait);
-	x = (philo->index + 1) % ((t_data *)data)->philos_num;
-	philo->last_meal = ((t_data *)data)->start;
-	if (philo->index % 2)
-		usleep (500);
+	data = data_;
+	pthread_mutex_lock(data->wait);
+	philo = data->philo + index++;
+	pthread_mutex_unlock(data->wait);
+	x = (philo->index + 1) % data->philos_num;
+	philo->last_meal = data->start;
+	(philo->index % 2 == 1) && usleep (500);
 	while (1)
 	{
-		pthread_mutex_lock(&philo->fork);
-		gettimeofday(&now, NULL);
-		my_print(data, now, philo->index + 1, 1);
-		pthread_mutex_lock(&(((t_data *)data)->philo + x)->fork);
+		pthread_mutex_lock(philo->fork);
+		my_print(data, philo->index + 1, 1);
+		pthread_mutex_lock((data->philo + x)->fork);
 		eat(data, philo);
-		sleep_unlock(data, philo, x);
-		gettimeofday(&now, NULL);
-		my_print(data, now, philo->index + 1, 5);
+		pthread_mutex_unlock((data->philo + x)->fork);
+		my_print(data, philo->index + 1, 4);
+		my_sleep(data->time_to_sleep);
+		my_print(data, philo->index + 1, 5);
 	}
 	return (NULL);
 }
 
 void	check_for_starvation(t_data *data, t_philo *philo)
 {
-	int				i;
-	struct timeval	now;
+	int	i;
 
-	usleep(1000);
+	usleep(50);
 	while (1)
 	{
-		pthread_mutex_lock(&data->must_eat);
+		pthread_mutex_lock(data->must_eat);
 		if (!data->philos_left)
 			return ;
-		pthread_mutex_unlock(&data->must_eat);
+		pthread_mutex_unlock(data->must_eat);
 		i = -1;
-		gettimeofday(&now, NULL);
 		while (++i < data->philos_num)
 		{
-			pthread_mutex_lock(&(philo + i)->meal);
-			if (gettimestamp((philo + i)->last_meal, now) > data->time_to_die)
+			pthread_mutex_lock((philo + i)->meal);
+			if (gettimestamp((philo + i)->last_meal) > data->time_to_die)
 			{
-				my_print(data, now, i + 1, 6);
+				my_print(data, i + 1, 6);
 				return ;
 			}
-			pthread_mutex_unlock(&(philo + i)->meal);
+			pthread_mutex_unlock((philo + i)->meal);
 		}
-		usleep(1000);
+		usleep(50);
 	}
 }
 
@@ -116,13 +100,6 @@ int	main(int ac, char **av)
 	while (++i < data->philos_num)
 		pthread_create(th + i, NULL, critical_section, data);
 	check_for_starvation(data, data->philo);
-	while (++i < data->philos_num)
-	{
-		pthread_mutex_destroy(&(data->philo + i)->fork);
-		pthread_mutex_destroy(&(data->philo + i)->meal);
-	}
-	pthread_mutex_destroy(&data->wait);
-	pthread_mutex_destroy(&data->must_eat);
-	pthread_mutex_destroy(&data->print);
+	//	destroy mutexes
 	return (0);
 }

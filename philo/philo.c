@@ -19,7 +19,7 @@ void	eat(t_data *data, t_philo *philo)
 	pthread_mutex_lock(philo->meal);
 	gettimeofday(&(philo->last_meal), NULL);
 	pthread_mutex_unlock(philo->meal);
-	my_sleep(data->time_to_sleep);
+	my_sleep(data->time_to_eat);
 	if (philo->must_eat > 0 && !(--(philo->must_eat)))
 	{
 		pthread_mutex_lock(data->must_eat);

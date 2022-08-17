@@ -65,8 +65,8 @@ t_philo	*init_philos(t_data *data, char **av)
 		(philo + i)->must_eat = n;
 		(philo + i)->fork = malloc(sizeof(pthread_mutex_t));
 		(philo + i)->meal = malloc(sizeof(pthread_mutex_t));
-		if (!(philo + i)->fork || !(philo + i)->meal)
-			return (error_case_free(data, philo, i));
+		// if (!(philo + i)->fork || !(philo + i)->meal)
+		// 	return (error_case_free(data, philo, i));
 		pthread_mutex_init((philo + i)->fork, NULL);
 		pthread_mutex_init((philo + i)->meal, NULL);
 		

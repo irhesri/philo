@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"philo_bonus.h": "c",
+		"wait.h": "c",
+		"typeinfo": "c"
+	}
+}

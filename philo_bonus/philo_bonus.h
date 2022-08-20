@@ -34,10 +34,6 @@ typedef struct s_data
 void	init_data(t_data *data, char **av, int ac);
 void	number_of_meal(t_data *data);
 
-void	check(t_data *data, int sig);
-void	sig_call(int sig);
-// pid_t	check_for_meals(t_data *data);
-void	check_philos(t_data *data);
 
 
 
@@ -47,5 +43,14 @@ void	my_sleep(int time_to_sleep);
 time_t	gettimestamp(struct timeval start);
 char	*my_name(int n);
 short	error(char *str, pid_t id);
+
+
+// PROCESS FUNCTIONS
+void	end_process(int sig);
+void	start_process(t_data *data, int index);
+void	*critical_section(void *data_);
+// void	check_for_starvation(t_data *data);
+void	check_on_philos(t_data *data);
+void	check_on_meals(t_data *data, int sig);
 
 #endif

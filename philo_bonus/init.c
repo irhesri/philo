@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:29:29 by imane             #+#    #+#             */
-/*   Updated: 2022/08/19 19:27:54 by imane            ###   ########.fr       */
+/*   Updated: 2022/08/20 14:05:51 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,5 @@ void	init_data(t_data *data, char **av, int ac)
 	data->print = sem_open("print", O_CREAT, 0644, 1);
 	(data->print == SEM_FAILED) && error("sem_open error\n", -1);
 	init_forks(data);
+	check_on_meals(data, 0);
 }

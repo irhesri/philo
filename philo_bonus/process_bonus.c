@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   process_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/23 13:48:28 by imane             #+#    #+#             */
+/*   Updated: 2022/08/23 13:52:24 by imane            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo_bonus.h"
 
 void	eat(t_data *data)
@@ -12,7 +24,6 @@ void	eat(t_data *data)
 		data->must_eat--;
 	if (!data->must_eat)
 		kill(*(data->id), SIGUSR1);
-
 }
 
 void	*critical_section(void *data_)
@@ -74,5 +85,7 @@ void	start_process(t_data *data, int index)
 		signal(SIGUSR2, end_process);
 		(pthread_create(&th, NULL, critical_section, data));
 		check_for_starvation(data);
+		while (1)
+			;
 	}
 }

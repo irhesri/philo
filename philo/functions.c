@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:15 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/19 13:18:39 by imane            ###   ########.fr       */
+/*   Updated: 2022/08/23 13:44:41 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	my_sleep(int time_to_sleep)
 {
 	struct timeval	now;
-	struct timeval start;
-	
+	struct timeval	start;
+
 	gettimeofday(&start, NULL);
 	usleep(100);
 	while (gettimestamp(start) < time_to_sleep)
@@ -34,8 +34,6 @@ time_t	gettimestamp(struct timeval start)
 	gettimeofday(&now, NULL);
 	res[0] = now.tv_usec / 1000 + now.tv_sec * 1000;
 	res[1] = start.tv_usec / 1000 + start.tv_sec * 1000 ;
-	// res[0] = (end.tv_sec - start.tv_sec) * 1000;
-	// res[1] = (end.tv_usec - start.tv_usec) / 1000;
 	return (res[0] - res[1]);
 }
 
@@ -67,7 +65,10 @@ int	my_atoi(char *str)
 
 	n = 0;
 	if (*str == '-')
-		exit(printf("input should include potisive numbers only\n"));
+	{
+		printf("input should include potisive numbers only\n");
+		return (-1);
+	}
 	if (*str == '+' && *(str + 1))
 		str++;
 	while (*str > 47 && *str < 58)
@@ -75,9 +76,10 @@ int	my_atoi(char *str)
 		n = n * 10 + *str - 48;
 		str++;
 	}
-	if (*str)
-		exit(printf("input should include numbers only\n"));
-	if (!n)
-		exit(printf("input should only include numbers bigger than zero\n"));
+	if (*str || !n)
+	{
+		printf("input should include only numbers bigger than\n");
+		return (-1);
+	}
 	return (n);
 }

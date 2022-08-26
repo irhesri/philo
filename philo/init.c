@@ -3,106 +3,101 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:18 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/14 15:16:39 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/08/23 13:46:01 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// void	destroy_mutex()
-// {
-// 	if (n - 6)
-// }
-
-void	*free_data(t_data *data)
+short	mutex_destroy(t_data *data, t_philo *philo, int index)
 {
-	pthread_mutex_destroy(data->print);
-	pthread_mutex_destroy(data->wait);
-	pthread_mutex_destroy(data->must_eat);
-	free (data->print);
-	free (data->wait);
-	free (data->must_eat);
-	free (data);
-}
+	int	i;
 
-void	*free_philo(t_philo *philo, int i)
-{
-	int	n;
-
-	n = -1;
-	while (++n <= i)
+	i = -1;
+	while (++i < index)
 	{
-		pthread_mutex_destroy((philo + n)->fork);
-		pthread_mutex_destroy((philo + n)->meal);
-		free ((philo + n)->fork);
-		free ((philo + n)->meal);
+		pthread_mutex_destroy((philo + i)->fork);
+		pthread_mutex_destroy((philo + i)->meal);
 	}
-	free (philo);
-	return (NULL);
+	pthread_mutex_destroy(data->must_eat);
+	pthread_mutex_destroy(data->wait);
+	pthread_mutex_destroy(data->print);
+	return (1);
 }
 
-t_philo	*init_philos(t_data *data, char **av)
+short	init_philos(t_data *data, t_philo *philo)
 {
 	int		i;
 	int		n;
-	int		error;
-	t_philo	*philo;
 
-	error = 0;
-	philo = malloc(sizeof(t_philo) * data->philos_num);
-	if (!philo)
-		return (NULL);
 	n = -1;
 	if (data->philos_left != -1)
-		n = my_atoi(av[5]);
+		n = data->n_to_eat;
 	i = -1;
-	while (!error && ++i < data->philos_num)
+	while (++i < data->philos_num)
 	{
 		(philo + i)->index = i;
 		(philo + i)->must_eat = n;
 		(philo + i)->fork = malloc(sizeof(pthread_mutex_t));
 		(philo + i)->meal = malloc(sizeof(pthread_mutex_t));
-		// if (!(philo + i)->fork || !(philo + i)->meal)
-		// 	return (error_case_free(data, philo, i));
-		pthread_mutex_init((philo + i)->fork, NULL);
-		pthread_mutex_init((philo + i)->meal, NULL);
-		
+		if (!(philo + i)->fork || !(philo + i)->meal)
+			return (mutex_destroy(data, philo, i));
+		if (pthread_mutex_init((philo + i)->fork, NULL))
+			return (mutex_destroy(data, philo, i));
+		if (pthread_mutex_init((philo + i)->meal, NULL))
+		{
+			pthread_mutex_destroy((philo + i)->fork);
+			return (mutex_destroy(data, philo, i));
+		}
 	}
-	return (philo);
+	return (0);
 }
 
-t_data	*init_data(int ac, char **av)
+short	init_mutex(t_data *data)
 {
-	int		error;
-	t_data	*data;
+	if (pthread_mutex_init(data->print, NULL))
+		return (1);
+	if (pthread_mutex_init(data->wait, NULL))
+	{
+		pthread_mutex_destroy(data->print);
+		return (1);
+	}
+	if (pthread_mutex_init(data->must_eat, NULL))
+	{
+		pthread_mutex_destroy(data->print);
+		pthread_mutex_destroy(data->wait);
+		return (1);
+	}
+	return (0);
+}
 
-	error = 0;
-	data = (t_data *) malloc(sizeof(t_data));
-	if (!data)
-		return (data);
+short	init_data(t_data *data, char **av, int ac)
+{
 	data->philos_num = my_atoi(av[1]);
 	data->time_to_die = my_atoi(av[2]);
 	data->time_to_eat = my_atoi(av[3]);
 	data->time_to_sleep = my_atoi(av[4]);
 	data->philos_left = -1;
+	if (data->philos_num < 0 || data->time_to_die < 0
+		|| data->time_to_die < 0 || data->time_to_sleep < 0)
+		return (1);
 	if (ac == 6)
+	{
+		data->n_to_eat = my_atoi(av[5]);
+		if (data->n_to_eat < 0)
+			return (1);
 		data->philos_left = data->philos_num;
+	}
 	data->print = malloc(sizeof(pthread_mutex_t));
 	data->wait = malloc(sizeof(pthread_mutex_t));
 	data->must_eat = malloc(sizeof(pthread_mutex_t));
-	// if (!data->print || !data->wait || !data->must_eat)
-	// 	return (error_case_free(data, NULL, -42));
-	error -= (pthread_mutex_init(data->wait, NULL) != 0);
-	error -= (pthread_mutex_init(data->print, NULL) != 0) * 2;
-	error -= (pthread_mutex_init(data->must_eat, NULL) != 0) * 6;
-	// if (error)
-	// 	return (error_case_free(data, NULL, error)); 
-	data->philo = init_philos(data, av);
-	// if (!data->philo)
-	// 	return (NULL);
-	return (data);
+	data->philo = malloc(sizeof(t_philo) * data->philos_num);
+	if (!data->print || !data->wait || !data->must_eat || !data->philo)
+		return (printf("allocation error\n"));
+	if (init_mutex(data))
+		return (1);
+	return (init_philos(data, data->philo));
 }
-

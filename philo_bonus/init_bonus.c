@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:29:29 by imane             #+#    #+#             */
-/*   Updated: 2022/08/20 14:05:51 by imane            ###   ########.fr       */
+/*   Updated: 2022/08/23 13:49:01 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init_forks(t_data *data)
 	while (++i < data->philos_num)
 	{
 		str = my_name(i);
-		(sem_unlink(str) == -1);// && error("sem_unlink error\n", -1);
+		(sem_unlink(str) == -1);
 		*(data->fork + i) = sem_open(str, O_CREAT, 0644, 1);
 		(*(data->fork + i) == SEM_FAILED) && error("sem_open error\n", -1);
 		free(str);
@@ -45,7 +45,7 @@ void	init_data(t_data *data, char **av, int ac)
 	(!data->meal) && error("allocation error\n", -1);
 	if (pthread_mutex_init(data->meal, NULL) != 0)
 		error("mutex_init error\n", -1);
-	(sem_unlink("print") == -1);// && error("sem_unlink error\n", -1);
+	(sem_unlink("print") == -1);
 	data->print = sem_open("print", O_CREAT, 0644, 1);
 	(data->print == SEM_FAILED) && error("sem_open error\n", -1);
 	init_forks(data);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:28 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/14 13:33:15 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/08/23 13:45:50 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_data
 	int				philos_left;
 	int				time_to_die;
 	int				time_to_eat;
+	int				n_to_eat;
 	int				time_to_sleep;
 	t_philo			*philo;
 	struct timeval	start;
@@ -45,8 +46,8 @@ typedef struct s_data
 int		my_atoi(char *str);
 void	my_print(t_data *data, int index, short n);
 void	my_sleep(int time_to_sleep);
-// void	my_sleep(struct timeval start, int time_to_sleep);
-t_data	*init_data(int ac, char **av);
+short	init_data(t_data *data, char **av, int ac);
+short	mutex_destroy(t_data *data, t_philo *philo, int index);
 time_t	gettimestamp(struct timeval start);
 
 #endif

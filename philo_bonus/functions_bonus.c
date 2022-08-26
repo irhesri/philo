@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   functions_bonus.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/23 13:48:42 by imane             #+#    #+#             */
+/*   Updated: 2022/08/23 13:48:43 by imane            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo_bonus.h"
 
 void	my_sleep(int time_to_sleep)
 {
 	struct timeval	now;
-	struct timeval start;
-	
+	struct timeval	start;
+
 	gettimeofday(&start, NULL);
 	usleep(100);
 	while (gettimestamp(start) < time_to_sleep)
@@ -32,17 +44,17 @@ void	my_print(t_data *data, int index, short n)
 	ts = gettimestamp(data->start);
 	sem_wait(data->print);
 	if (n == 1)
-		printf(" % 8ld % 4d   has taken a right fork 🍴 \n", ts, index);
+		printf(" % 8ld % 4d   has taken a fork \n", ts, index);
 	if (n == 2)
-		printf(" % 8ld % 4d   has taken a left fork  🍴 \n", ts, index);
+		printf(" % 8ld % 4d   has taken a fork \n", ts, index);
 	if (n == 3)
-		printf("\033[34;1m % 8ld % 4d   is eating\033[0m   🍽️ \n", ts, index);
+		printf("\033[34;1m % 8ld % 4d   is eating\033[0m \n", ts, index);
 	if (n == 4)
-		printf("\033[0;1m % 8ld % 4d   is sleeping\033[0m 😴 \n", ts, index);
+		printf("\033[0;1m % 8ld % 4d   is sleeping\033[0m \n", ts, index);
 	if (n == 5)
-		printf("\033[2;1m % 8ld % 4d   is thinking\033[0m 💭 \n", ts, index);
+		printf("\033[2;1m % 8ld % 4d   is thinking\033[0m  \n", ts, index);
 	if (n == 6)
-		printf("\033[31;1m % 8ld % 4d   died!\033[0m    💀 \n", ts, index);
+		printf("\033[31;1m % 8ld % 4d   died!\033[0m    \n", ts, index);
 	if (n != 6)
 		sem_post(data->print);
 }

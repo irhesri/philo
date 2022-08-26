@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 11:23:29 by imane             #+#    #+#             */
-/*   Updated: 2022/08/20 14:43:44 by imane            ###   ########.fr       */
+/*   Updated: 2022/08/23 13:50:21 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,10 @@ int	main(int ac, char **av)
 	while (++i < data->philos_num)
 		start_process(data, i);
 	i = -1;
-	waitpid(data->id[++i], NULL, 0);	
+	waitpid(data->id[++i], NULL, 0);
 	while (++i < (data->philos_num + 1))
 		kill(data->id[i], SIGUSR2);
-	usleep (100);
-	// while (1)
-	// {
-	// 	i = waitpid(-1, NULL, 0);
-	// 	// printf("%d\n", i);
-	// 	if (i < 0)
-	// 		break ;	
-	// }
+	while (waitpid(-1, NULL, 0) > 0)
+		;
 	return (0);
 }

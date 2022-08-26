@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check.c                                            :+:      :+:    :+:   */
+/*   check_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:42:00 by imane             #+#    #+#             */
-/*   Updated: 2022/08/20 14:32:06 by imane            ###   ########.fr       */
+/*   Updated: 2022/08/23 13:52:30 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	check_on_meals(t_data *data, int sig)
 	}
 	if (sig == SIGUSR1 && d->philos_left > 0)
 		d->philos_left--;
-	if (!d->philos_left || sig == SIGUSR2)
+	if (!d->philos_left)
 		end_process(0);
 }
 
@@ -41,7 +41,8 @@ void	check_on_philos(t_data *data)
 	if (*(data->id) == 0)
 	{
 		signal(SIGUSR1, sig_call);
-		signal(SIGUSR2, sig_call);
-		while (1);		
+		signal(SIGUSR2, end_process);
+		while (1)
+			;
 	}
 }

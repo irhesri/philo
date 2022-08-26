@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:24 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/14 17:40:13 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/08/23 13:42:37 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,15 +91,23 @@ int	main(int ac, char **av)
 
 	if (ac != 5 && ac != 6)
 		return (printf("wrong num of arguments\n"));
-	data = init_data(ac, av);
-	th = malloc (sizeof(pthread_t) * my_atoi(av[1]));
-	if (!data || !data->philo || !th)
+	data = malloc(sizeof(t_data));
+	if (!data)
+		return (printf("allocation error\n"));
+	if (init_data(data, av, ac))
+		return (1);
+	th = malloc (sizeof(pthread_t) * data->philos_num);
+	if (!th)
 		return (printf("allocation error\n"));
 	gettimeofday(&data->start, NULL);
 	i = -1;
 	while (++i < data->philos_num)
-		pthread_create(th + i, NULL, critical_section, data);
-	check_for_starvation(data, data->philo);
-	//	destroy mutexes
+	{
+		if (pthread_create(th + i, NULL, critical_section, data))
+			printf("pthread_create error\n");
+	}
+	if (i == data->philos_num)
+		check_for_starvation(data, data->philo);
+	mutex_destroy(data, data->philo, data->philos_num);
 	return (0);
 }

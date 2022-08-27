@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:42:00 by imane             #+#    #+#             */
-/*   Updated: 2022/08/23 13:52:30 by imane            ###   ########.fr       */
+/*   Updated: 2022/08/27 01:05:26 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	check_on_meals(t_data *data, int sig)
 {
-	int				i;
 	static t_data	*d;
 
 	if (data || !d)

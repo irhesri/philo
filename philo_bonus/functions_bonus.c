@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   functions_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 13:48:42 by imane             #+#    #+#             */
-/*   Updated: 2022/08/23 13:48:43 by imane            ###   ########.fr       */
+/*   Updated: 2022/08/28 12:22:00 by irhesri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,30 @@ void	my_print(t_data *data, int index, short n)
 	if (n == 5)
 		printf("\033[2;1m % 8ld % 4d   is thinking\033[0m  \n", ts, index);
 	if (n == 6)
-		printf("\033[31;1m % 8ld % 4d   died!\033[0m    \n", ts, index);
+		printf("\033[31;1m % 8ld % 4d   died\033[0m    \n", ts, index);
 	if (n != 6)
 		sem_post(data->print);
+}
+
+int	my_atoi(char *str)
+{
+	unsigned long long	n;
+
+	n = 0;
+	if (!str)
+		return (-1);
+	if (*str == '-')
+		exit(printf("input should include potisive numbers only\n"));
+	if (*str == '+' && *(str + 1))
+		str++;
+	while (*str > 47 && *str < 58)
+	{
+		n = n * 10 + *str - 48;
+		str++;
+	}
+	if (*str)
+		exit(printf("input should include numbers only\n"));
+	if (!n)
+		exit(printf("input should only include numbers bigger than zero\n"));
+	return (n);
 }

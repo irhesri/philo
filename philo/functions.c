@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   functions.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:15 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/23 13:44:41 by imane            ###   ########.fr       */
+/*   Updated: 2022/08/27 05:14:28 by irhesri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	my_print(t_data *data, int index, short n)
 	if (n == 5)
 		printf("\033[2;1m % 8ld % 4d   is thinking\033[0m \n", ts, index);
 	if (n == 6)
-		printf("\033[31;1m % 8ld % 4d   died!\033[0m \n", ts, index);
+		printf("\033[31;1m % 8ld % 4d   died\033[0m \n", ts, index);
 	if (n != 6)
 		pthread_mutex_unlock(data->print);
 }

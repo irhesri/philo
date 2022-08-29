@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+         #
+#    By: imane <imane@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/27 01:06:33 by imane             #+#    #+#              #
-#    Updated: 2022/08/28 12:32:26 by irhesri          ###   ########.fr        #
+#    Updated: 2022/08/29 08:56:55 by imane            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= philo_bonus
 SRC		= philo_bonus.c processes_bonus.c functions_bonus.c
 CC		= gcc #-g -fsanitize=thread
-# CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror
 OBJ		= $(SRC:%.c=%.o)
 
 all: $(NAME)

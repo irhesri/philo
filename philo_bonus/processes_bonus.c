@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   processes_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 08:48:10 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/28 12:35:00 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/08/29 08:56:17 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ short	error(t_data *data, char *str)
 
 void	eat(t_data *data)
 {
-	my_print(data, data->index, 2);
-	my_print(data, data->index, 3);
+	my_print(data, data->index + 1, 2);
+	my_print(data, data->index + 1, 3);
 	pthread_mutex_lock(&data->meal);
 	gettimeofday(&(data->last_meal), NULL);
 	pthread_mutex_unlock(&data->meal);
@@ -43,7 +43,7 @@ void	*critical_section(void *data_)
 	while (1)
 	{
 		sem_wait(data->forks);
-		my_print(data, data->index, 1);
+		my_print(data, data->index + 1, 1);
 		sem_wait(data->forks);
 		eat(data);
 		sem_post(data->forks);
@@ -53,9 +53,9 @@ void	*critical_section(void *data_)
 			pthread_mutex_destroy(&data->meal);
 			exit (0);
 		}
-		my_print(data, data->index, 4);
+		my_print(data, data->index + 1, 4);
 		my_sleep(data->time_to_sleep);
-		my_print(data, data->index, 5);
+		my_print(data, data->index + 1, 5);
 	}
 	return (NULL);
 }
@@ -68,7 +68,7 @@ void	check_for_starvation(t_data *data)
 		pthread_mutex_lock(&data->meal);
 		if (gettimestamp(data->last_meal) > data->time_to_die)
 		{
-			my_print(data, data->index, 6);
+			my_print(data, data->index + 1, 6);
 			pthread_mutex_destroy(&data->meal);
 			exit (8473);
 		}

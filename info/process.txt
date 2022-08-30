@@ -1,0 +1,5 @@
+https://www.tutorialspoint.com/operating_system/os_processes.htm
+
+https://www.geeksforgeeks.org/difference-between-zombie-orphan-and-daemon-processes/
+
+https://www.scaler.com/topics/operating-system/zombie-and-orphan-process-in-os/

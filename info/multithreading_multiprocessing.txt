@@ -1,0 +1,47 @@
+==> WHAT IS A THREAD:_________________________________________________________________________________________________________________
+
+	A thread is a small set of instructions designed to be scheduled and executed by the CPU independently of the parent process. 
+	For example, a program may have an open thread waiting for a specific event to occur or running a separate job, allowing the main program to perform other tasks. 
+
+	A program is capable of having multiple threads open at once and terminates or suspends them after the task is completed or the program is closed.
+
+	==> SOME THREAD DEFINITIONS:
+		Thread is a light weight process.
+		Thread is a segment of a process.
+______________________________________________________________________________________________________________________________________
+
+==>	MULTITHREADING VS MULTIPROCESSING:________________________________________________________________________________________________
+
+							$THREADS							|						$PROCESSES
+	-----------------------------------------------------------------------------------------------------------------------------
+	+threads terminates after the task is completed				|	+processes terminates after the task is completed
+	-if the program (the main thread) terminates the 			|	-if the program (the parent) terminates before the task is 
+	other threads terminates									|	completed the child process become orphan or zombie process
+																|	(https://www.scaler.com/topics/operating-system/zombie-and-orphan-process-in-os/)
+	-run in a shared memory space								|	-run in a separate memory space (every process is isolated)
+	-not independent of one another								|	-independent of one another
+	-share data with each other									|	-doesn't share data with eachother (have separate address spaces)
+	(code section, data section[heap], and OS resources)		|
+	+has its own program counter (PC),register set,				|	+has its own program counter (PC),	register set, and stack space
+	and stack space.											|	 and stack space.
+______________________________________________________________________________________________________________________________________
+
+
+==>	WHY MULTITHREADING:_______________________________________________________________________________________________________________
+
+	-It allows you to execute multiple threads of a single process concurrently.
+	-The creation of a thread is economical in time and resource, while the creation of a process is slow and resource-specific.
+	-It takes less time for creating or terminating a thread than a process.
+	-Thread is more efficient in terms of communication.
+	-No need for system calls (calling the OS) so it doesn't interrupt the kernel.
+______________________________________________________________________________________________________________________________________
+
+
+==>	WHY MULTIPROCESSING:______________________________________________________________________________________________________________
+
+	-It allows you to execute multiple processes concurrently.
+	-Child processes are mostly interruptible/killable. while threads are not.
+	-No race condition.
+	-If a process is blocked then it will not affect the execution of other processes, while if a user-level thread is blocked,
+	then all other user-level threads are blocked. (https://www.tutorialspoint.com/user-level-threads-and-kernel-level-threads)
+______________________________________________________________________________________________________________________________________

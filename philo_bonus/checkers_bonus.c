@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 13:03:05 by imane             #+#    #+#             */
-/*   Updated: 2022/08/30 13:32:43 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/10 09:50:00 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,13 @@ void	check_for_starvation(t_data *data)
 	while (1)
 	{
 		usleep(50);
-		pthread_mutex_lock(&data->meal);
+		sem_wait(*(data->meal + data->index));
 		if (gettimestamp(data->last_meal) > data->time_to_die)
 		{
 			my_print(data, data->index + 1, 6);
-			pthread_mutex_destroy(&data->meal);
 			exit (8473);
 		}
-		pthread_mutex_unlock(&data->meal);
+		sem_post(*(data->meal + data->index));
 	}
 }
 

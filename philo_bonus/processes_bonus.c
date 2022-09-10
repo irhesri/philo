@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 08:48:10 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/30 13:38:36 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/10 10:12:32 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	eat(t_data *data)
 		error(data, "sem_wait");
 	my_print(data, data->index + 1, 2);
 	my_print(data, data->index + 1, 3);
-	pthread_mutex_lock(&data->meal);
+	sem_wait(*(data->meal + data->index));
 	gettimeofday(&(data->last_meal), NULL);
-	pthread_mutex_unlock(&data->meal);
+	sem_post(*(data->meal + data->index));
 	my_sleep(data->time_to_eat);
 	if (data->must_eat > 0)
 		data->must_eat--;
@@ -37,6 +37,7 @@ void	*critical_section(void *data_)
 {
 	t_data	*data;
 
+	
 	data = data_;
 	while (gettimestamp(data->start) < 1)
 		usleep(10);
@@ -65,8 +66,6 @@ void	start_process(t_data *data, int index)
 	data->id[index] = fork();
 	if (data->id[index] == 0)
 	{
-		if (pthread_mutex_init(&data->meal, NULL) != 0)
-			error(data, "pthread_mutex_init");
 		data->index = index;
 		data->last_meal = data->start;
 		if (pthread_create(&th, NULL, critical_section, data) != 0)

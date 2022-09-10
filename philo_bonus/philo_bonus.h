@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 11:51:49 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/30 13:40:37 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/10 10:14:36 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,20 @@ typedef struct s_data
 	sem_t			*print;
 	sem_t			*forks;
 	sem_t			*n_of_meals;
+	sem_t			**meal;
 	struct timeval	last_meal;
 	struct timeval	start;
-	pthread_mutex_t	meal;
 }	t_data;
 
 int		my_atoi(char *str);
+char	*sem_name(int n);
 void	my_sleep(int time_to_sleep);
 void	my_print(t_data *data, int index, short n);
 void	start_process(t_data *data, int index);
-short	error(t_data *data, char *str);
 void	end_processes(t_data *data, pid_t id);
 void	check_for_starvation(t_data *data);
 void	*check_meals(void *data);
+short	error(t_data *data, char *str);
 time_t	gettimestamp(struct timeval start);
 
 #endif

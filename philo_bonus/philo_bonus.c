@@ -6,11 +6,37 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 11:51:06 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/30 13:23:32 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/10 10:16:19 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+
+void	init_sem(t_data *data)
+{
+	int		index;
+	char	*name;
+
+	index = -1;
+	while (++index < data->philos_num)
+	{
+		name = sem_name(index);
+		sem_unlink(name);
+		*(data->meal + index) = sem_open(name, O_CREAT, 0644, 1);
+		free (name);
+		if (*(data->meal + index) == SEM_FAILED)
+			exit (printf("sem_open error\n"));
+	}
+	sem_unlink("print");
+	sem_unlink("forks");
+	sem_unlink("number_of_meals");
+	data->print = sem_open("print", O_CREAT, 0644, 1);
+	data->forks = sem_open("forks", O_CREAT, 0644, data->philos_num);
+	data->n_of_meals = sem_open("number_of_meals", O_CREAT, 0644, 0);
+	if (data->print == SEM_FAILED || data->forks == SEM_FAILED
+		|| data->n_of_meals == SEM_FAILED)
+		exit (printf("sem_open error\n"));
+}
 
 t_data	*init_data(char **av)
 {
@@ -25,17 +51,10 @@ t_data	*init_data(char **av)
 	data->time_to_sleep = my_atoi(av[4]);
 	data->must_eat = my_atoi(av[5]);
 	data->id = malloc(sizeof(pid_t) * data->philos_num);
-	if (!data->id)
+	data->meal = malloc(sizeof(sem_t *) * data->philos_num);
+	if (!data->id || !data->meal)
 		exit (printf("allocation error\n"));
-	sem_unlink("print");
-	sem_unlink("forks");
-	sem_unlink("number_of_meals");
-	data->print = sem_open("print", O_CREAT, 0644, 1);
-	data->forks = sem_open("forks", O_CREAT, 0644, data->philos_num);
-	data->n_of_meals = sem_open("number_of_meals", O_CREAT, 0644, 0);
-	if (data->print == SEM_FAILED || data->forks == SEM_FAILED
-		|| data->n_of_meals == SEM_FAILED)
-		exit (printf("sem_open error\n"));
+	init_sem(data);
 	return (data);
 }
 

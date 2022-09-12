@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:15 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/12 02:49:44 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/12 02:55:00 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	my_atoi(char *str)
 	}
 	if (*str || !n || n > 2147483647)
 	{
-		printf("input should include only numbers between zero and max int\n");
+		printf("input should include only numbers between one and max int\n");
 		return (-1);
 	}
 	return (n);

@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 13:48:42 by imane             #+#    #+#             */
-/*   Updated: 2022/08/30 13:33:42 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/12 02:53:34 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,17 @@ int	my_atoi(char *str)
 		exit(printf("input should include potisive numbers only\n"));
 	if (*str == '+' && *(str + 1))
 		str++;
-	while (*str > 47 && *str < 58)
+	while (*str > 47 && *str < 58 && n < 2147483647)
 	{
 		n = n * 10 + *str - 48;
 		str++;
 	}
 	if (*str)
 		exit(printf("input should include numbers only\n"));
-	if (!n)
-		exit(printf("input should only include numbers bigger than zero\n"));
+	if (!n || n > 2147483647)
+	{
+		printf("input should only include numbers between one and max int\n");
+		exit(1);
+	}
 	return (n);
 }

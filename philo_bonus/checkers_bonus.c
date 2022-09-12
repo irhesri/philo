@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 13:03:05 by imane             #+#    #+#             */
-/*   Updated: 2022/09/10 09:50:00 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/12 02:45:49 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	check_for_starvation(t_data *data)
 
 void	*check_meals(void *data_)
 {
+	int			n;
 	t_data		*data;
-	static int	n;
 
 	data = data_;
 	while (1)

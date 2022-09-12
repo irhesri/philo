@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 08:52:05 by imane             #+#    #+#             */
-/*   Updated: 2022/09/10 10:21:22 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/12 02:42:29 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*sem_name(int n)
 
 	size = int_size(n);
 	size += 4;
-	name = malloc(sizeof(size + 1));
+	name = malloc(size + 1);
 	name[size] = '\0';
 	name[0] = 's';
 	name[1] = 'e';

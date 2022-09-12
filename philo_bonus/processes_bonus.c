@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 08:48:10 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/10 10:12:32 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/12 02:42:38 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	*critical_section(void *data_)
 {
 	t_data	*data;
 
-	
 	data = data_;
 	while (gettimestamp(data->start) < 1)
 		usleep(10);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   functions.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:15 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/27 05:14:28 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/09/12 02:49:44 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,14 @@ int	my_atoi(char *str)
 	}
 	if (*str == '+' && *(str + 1))
 		str++;
-	while (*str > 47 && *str < 58)
+	while (*str > 47 && *str < 58 && n < 2147483647)
 	{
 		n = n * 10 + *str - 48;
 		str++;
 	}
-	if (*str || !n)
+	if (*str || !n || n > 2147483647)
 	{
-		printf("input should include only numbers bigger than\n");
+		printf("input should include only numbers between zero and max int\n");
 		return (-1);
 	}
 	return (n);

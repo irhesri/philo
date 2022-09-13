@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 11:51:06 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/13 12:42:05 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/09/13 16:38:12 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_data	*init_data(char **av)
 	data->time_to_eat = my_atoi(av[3]);
 	data->time_to_sleep = my_atoi(av[4]);
 	data->must_eat = my_atoi(av[5]);
-	data->id = malloc(sizeof(pid_t) * data->philos_num);
+	data->id = malloc(sizeof(pid_t) * (data->philos_num + 1));
 	data->meal = malloc(sizeof(sem_t *) * data->philos_num);
 	if (!data->id || !data->meal)
 		exit (printf("allocation error\n"));
@@ -77,6 +77,7 @@ int	main(int ac, char **av)
 	pid = fork();
 	(pid < 0) && error(data, "sem_post");
 	(!pid) && check_meals(data);
+	data->id[data->philos_num] = pid;
 	i = -1;
 	gettimeofday(&data->start, NULL);
 	while (++i < data->philos_num)

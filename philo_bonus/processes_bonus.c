@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   processes_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 08:48:10 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/13 12:42:42 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/09/13 16:39:22 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,6 @@ void	end_processes(t_data *data, pid_t id)
 		if (id != data->id[i])
 			kill(data->id[i], SIGKILL);
 	}
+	if (data->must_eat > 0 && id != data->id[i])
+		kill(data->id[i], SIGKILL);
 }

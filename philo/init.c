@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 03:25:18 by irhesri           #+#    #+#             */
-/*   Updated: 2022/08/23 13:46:01 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/13 11:20:46 by irhesri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ short	init_philos(t_data *data, t_philo *philo)
 		(philo + i)->must_eat = n;
 		(philo + i)->fork = malloc(sizeof(pthread_mutex_t));
 		(philo + i)->meal = malloc(sizeof(pthread_mutex_t));
+		gettimeofday(&(philo + i)->last_meal, NULL);
 		if (!(philo + i)->fork || !(philo + i)->meal)
 			return (mutex_destroy(data, philo, i));
 		if (pthread_mutex_init((philo + i)->fork, NULL))

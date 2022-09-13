@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 11:51:06 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/10 10:16:19 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/13 12:42:05 by irhesri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,14 @@ int	main(int ac, char **av)
 	int			i;
 	pid_t		pid;
 	t_data		*data;
-	pthread_t	th;
 
 	if (ac != 5 && ac != 6)
 		return (printf("wrong num of arguments\n"));
 	data = init_data(av);
+	pid = fork();
+	(pid < 0) && error(data, "sem_post");
+	(!pid) && check_meals(data);
 	i = -1;
-	if (pthread_create(&th, NULL, check_meals, data) != 0)
-		error(data, "pthread_create");
 	gettimeofday(&data->start, NULL);
 	while (++i < data->philos_num)
 		start_process(data, i);

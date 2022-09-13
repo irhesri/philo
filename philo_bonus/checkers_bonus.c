@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 13:03:05 by imane             #+#    #+#             */
-/*   Updated: 2022/09/12 02:45:49 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/13 12:41:45 by irhesri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,18 @@ void	check_for_starvation(t_data *data)
 	}
 }
 
-void	*check_meals(void *data_)
+short	check_meals(t_data *data)
 {
-	int			n;
-	t_data		*data;
+	int	n;
 
-	data = data_;
+	n = 0;
 	while (1)
 	{
 		if (sem_wait(data->n_of_meals) == -1)
 			error(data, "sem_wait");
 		n++;
 		if (n == data->philos_num)
-		{
-			end_processes(data, -1);
-			break ;
-		}
+			exit (1);
 	}
-	return (NULL);
+	return (1);
 }

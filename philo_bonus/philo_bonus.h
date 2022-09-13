@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 11:51:49 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/10 10:14:36 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/13 12:41:09 by irhesri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	my_print(t_data *data, int index, short n);
 void	start_process(t_data *data, int index);
 void	end_processes(t_data *data, pid_t id);
 void	check_for_starvation(t_data *data);
-void	*check_meals(void *data);
+short	check_meals(t_data *data);
 short	error(t_data *data, char *str);
 time_t	gettimestamp(struct timeval start);
 

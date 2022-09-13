@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   processes_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
+/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 08:48:10 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/12 02:42:38 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/13 12:42:42 by irhesri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,11 @@ void	eat(t_data *data)
 		error(data, "sem_wait");
 	my_print(data, data->index + 1, 2);
 	my_print(data, data->index + 1, 3);
-	sem_wait(*(data->meal + data->index));
+	if (sem_wait(*(data->meal + data->index)) == -1)
+		error(data, "sem_wait");
 	gettimeofday(&(data->last_meal), NULL);
-	sem_post(*(data->meal + data->index));
+	if (sem_post(*(data->meal + data->index)) == -1)
+		error(data, "sem_post");
 	my_sleep(data->time_to_eat);
 	if (data->must_eat > 0)
 		data->must_eat--;

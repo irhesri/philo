@@ -6,7 +6,7 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 11:51:06 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/15 11:57:58 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/15 12:03:44 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,19 @@ int	main(int ac, char **av)
 	if (ac != 5 && ac != 6)
 		return (printf("wrong num of arguments\n"));
 	data = init_data(av);
-	pid = fork();
-	(pid < 0) && error(data, "sem_post");
-	(!pid) && check_meals(data);
-	data->id[data->philos_num] = pid;
+	if (ac == 6)
+	{
+		pid = fork();
+		(pid < 0) && error(data, "sem_post");
+		(!pid) && check_meals(data);
+		data->id[data->philos_num] = pid;
+	}
 	i = -1;
 	gettimeofday(&data->start, NULL);
 	while (++i < data->philos_num)
 		start_process(data, i);
-	while (1)
-	{
-		pid = waitpid(-1, &i, 0);
-		if (pid < 0 || i > 0)
-			break ;
-	}
-	if (pid > 0)
-		end_processes(data, pid);
+	pid = waitpid(-1, &i, 0);
+	end_processes(data, pid);
 	close_sem(data);
 	return (0);
 }

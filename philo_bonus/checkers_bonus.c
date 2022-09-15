@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 13:03:05 by imane             #+#    #+#             */
-/*   Updated: 2022/09/13 12:41:45 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/09/15 11:58:16 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,11 @@ void	check_for_starvation(t_data *data)
 	while (1)
 	{
 		usleep(50);
-		sem_wait(*(data->meal + data->index));
 		if (gettimestamp(data->last_meal) > data->time_to_die)
 		{
 			my_print(data, data->index + 1, 6);
 			exit (8473);
 		}
-		sem_post(*(data->meal + data->index));
 	}
 }
 

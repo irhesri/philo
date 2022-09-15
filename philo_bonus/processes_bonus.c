@@ -6,12 +6,13 @@
 /*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 08:48:10 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/13 16:39:22 by imane            ###   ########.fr       */
+/*   Updated: 2022/09/15 11:59:21 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+// no need to protect last_meal because gettimeofday is thread safe
 void	eat(t_data *data)
 {
 	if (sem_wait(data->forks) == -1)
@@ -21,11 +22,7 @@ void	eat(t_data *data)
 		error(data, "sem_wait");
 	my_print(data, data->index + 1, 2);
 	my_print(data, data->index + 1, 3);
-	if (sem_wait(*(data->meal + data->index)) == -1)
-		error(data, "sem_wait");
 	gettimeofday(&(data->last_meal), NULL);
-	if (sem_post(*(data->meal + data->index)) == -1)
-		error(data, "sem_post");
 	my_sleep(data->time_to_eat);
 	if (data->must_eat > 0)
 		data->must_eat--;

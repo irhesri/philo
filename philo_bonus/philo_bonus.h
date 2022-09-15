@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irhesri <irhesri@student.42.fr>            +#+  +:+       +#+        */
+/*   By: imane <imane@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 11:51:49 by irhesri           #+#    #+#             */
-/*   Updated: 2022/09/13 12:41:09 by irhesri          ###   ########.fr       */
+/*   Updated: 2022/09/15 11:57:37 by imane            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_data
 	sem_t			*print;
 	sem_t			*forks;
 	sem_t			*n_of_meals;
-	sem_t			**meal;
 	struct timeval	last_meal;
 	struct timeval	start;
 }	t_data;

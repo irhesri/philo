@@ -58,8 +58,10 @@ make
 
 ## Restrictions:
 * Only the next functions are allowed:
+
 ➜ For the solution using ***Multithreading [Mutexes]***:
 >memset, printf, malloc, free, write, usleep, gettimeofday, pthread_create, pthread_detach, pthread_join, pthread_mutex_init, pthread_mutex_destroy, pthread_mutex_lock, pthread_mutex_unlock
+
 ➜ For the solution using ***Multiprocessing [Semaphores]***:
 >memset, printf, malloc, free, write, fork, kill, exit, pthread_create, pthread_detach, pthread_join, usleep, gettimeofday, waitpid, sem_open, sem_close, sem_post, sem_wait, sem_unlink
 * Global variables are not allowed.
